@@ -43,14 +43,19 @@ export default function ChatPage() {
     await runAnalysis();
   };
 
-  const suggestions = ["Which machines are high risk?", "Why is M-101 critical?", "Show maintenance schedule", "Give me a summary"];
+  const suggestions = [
+    "Which machines are at highest risk this week?",
+    "Show maintenance history for Pump Unit #4",
+    "What caused the last 3 unplanned downtimes?",
+    "Generate a 7-day maintenance schedule",
+    "Which equipment is overdue for servicing?",
+  ];
 
   return (
     <div className="flex h-[calc(100vh-7rem)] flex-col animate-fade-up">
       <div className="flex items-center justify-between pb-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">AI Assistant</h1>
-          <p className="text-sm text-muted-foreground">Ask questions about equipment health and maintenance priorities.</p>
+          <h1 className="text-2xl font-bold tracking-tight font-display">AI Maintenance Assistant</h1>
         </div>
         {chatMessages.length > 0 && (
           <Button variant="ghost" size="sm" onClick={clearChat}><Trash2 className="mr-1 h-4 w-4" />Clear</Button>
@@ -69,12 +74,11 @@ export default function ChatPage() {
 
         {hasData && chatMessages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <Bot className="h-12 w-12 text-primary/40" />
-            <p className="mt-3 font-medium">Ready to help</p>
-            <p className="mt-1 text-sm text-muted-foreground">Ask me about equipment health, risk levels, or schedules.</p>
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <h2 className="text-xl font-bold font-display">AI Maintenance Assistant</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Try asking:</p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2 max-w-2xl">
               {suggestions.map(s => (
-                <button key={s} onClick={() => { setInput(s); }} className="rounded-full border bg-background px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted active:scale-[0.97]">{s}</button>
+                <button key={s} onClick={() => { setInput(s); }} className="rounded-lg border bg-secondary px-3 py-2 text-xs font-medium transition-colors hover:bg-primary hover:text-primary-foreground active:scale-[0.97]">{s}</button>
               ))}
             </div>
           </div>
@@ -88,16 +92,16 @@ export default function ChatPage() {
               </div>
             )}
             <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm ${
-              msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+              msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-secondary"
             }`}>
               {msg.role === "assistant" ? (
-                <div className="prose prose-sm max-w-none [&_table]:text-xs [&_strong]:font-semibold">
+                <div className="prose prose-sm prose-invert max-w-none [&_table]:text-xs [&_strong]:font-semibold">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
               ) : msg.content}
             </div>
             {msg.role === "user" && (
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-muted-foreground">
                 <User className="h-4 w-4" />
               </div>
             )}
@@ -109,7 +113,7 @@ export default function ChatPage() {
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <Bot className="h-4 w-4" />
             </div>
-            <div className="rounded-xl bg-muted px-4 py-3">
+            <div className="rounded-xl bg-secondary px-4 py-3">
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
             </div>
           </div>
@@ -117,7 +121,7 @@ export default function ChatPage() {
       </div>
 
       <form onSubmit={e => { e.preventDefault(); handleSend(); }} className="mt-3 flex gap-2">
-        <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder={hasData ? "Ask about equipment health…" : "Load data first…"} disabled={!hasData || isTyping} className="flex-1" />
+        <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder={hasData ? "Ask about equipment health, maintenance history, or scheduling…" : "Load data first…"} disabled={!hasData || isTyping} className="flex-1" />
         <Button type="submit" size="icon" disabled={!input.trim() || !hasData || isTyping}>
           <Send className="h-4 w-4" />
         </Button>

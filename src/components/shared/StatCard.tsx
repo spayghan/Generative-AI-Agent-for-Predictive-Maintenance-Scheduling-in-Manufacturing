@@ -21,7 +21,7 @@ export function StatCard({ label, value, icon, variant = "default", className, d
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-muted-foreground">{label}</p>
-          <p className="mt-1 text-3xl font-bold tracking-tight tabular-nums">{value}</p>
+          <p className="mt-1 text-3xl font-bold tracking-tight tabular-nums font-display">{value}</p>
         </div>
         <div className={cn(
           "flex h-10 w-10 items-center justify-center rounded-lg",
