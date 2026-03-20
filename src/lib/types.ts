@@ -8,6 +8,9 @@ export interface MaintenanceLog {
   actionTaken?: string;
   riskLevel?: RiskLevel;
   reason?: string;
+  operator?: string;
+  logType?: string;
+  severity?: string;
 }
 
 export interface ScheduleEntry {
@@ -17,6 +20,10 @@ export interface ScheduleEntry {
   suggestedAction: string;
   explanation: string;
   priority: number;
+  scheduledDate?: string;
+  team?: string;
+  estimatedHours?: number;
+  status?: "Pending" | "In Progress" | "Completed";
 }
 
 export interface ChatMessage {
@@ -24,4 +31,14 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+}
+
+export interface Equipment {
+  id: string;
+  name: string;
+  type: string;
+  zone: string;
+  healthScore: number;
+  age: number;
+  lastServiced: string;
 }
