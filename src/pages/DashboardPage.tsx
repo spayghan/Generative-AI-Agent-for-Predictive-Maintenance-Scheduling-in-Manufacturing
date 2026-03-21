@@ -35,7 +35,7 @@ export default function DashboardPage() {
           <p className="mt-2 text-sm text-muted-foreground">Upload your own logs or load sample data to get started.</p>
           <div className="mt-6 flex items-center justify-center gap-3">
             <Button onClick={() => { loadSampleData(); runAnalysis(); }}>Load Sample Data</Button>
-            <Button variant="outline" onClick={() => navigate("/upload")}>Upload Logs</Button>
+            <Button variant="outline" onClick={() => navigate("/admin/upload")}>Upload Logs</Button>
           </div>
         </div>
       )}
@@ -127,7 +127,7 @@ export default function DashboardPage() {
         <div className="space-y-4 animate-fade-up animate-fade-up-delay-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold font-display">Recent AI Insights</h2>
-            <Button variant="link" size="sm" className="text-primary" onClick={() => navigate("/schedule")}>View All</Button>
+            <Button variant="link" size="sm" className="text-primary" onClick={() => navigate("/admin/schedule")}>View All</Button>
           </div>
           <div className="space-y-3">
             {schedule.slice(0, 3).map(s => (
