@@ -35,7 +35,7 @@ export default function DashboardPage() {
           <p className="mt-2 text-sm text-muted-foreground">Upload your own logs or load sample data to get started.</p>
           <div className="mt-6 flex items-center justify-center gap-3">
             <Button onClick={() => { loadSampleData(); runAnalysis(); }}>Load Sample Data</Button>
-            <Button variant="outline" onClick={() => navigate("/upload")}>Upload Logs</Button>
+            <Button variant="outline" onClick={() => navigate("/admin/upload")}>Upload Logs</Button>
           </div>
         </div>
       )}
