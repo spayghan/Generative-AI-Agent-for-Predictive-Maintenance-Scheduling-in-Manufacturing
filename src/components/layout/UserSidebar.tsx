@@ -1,4 +1,4 @@
-import { LayoutDashboard, MessageSquare, LogOut, ClipboardList, Activity } from "lucide-react";
+import { LayoutDashboard, MessageSquare, LogOut, ClipboardList, Activity, Lightbulb, HelpCircle } from "lucide-react";
 import { NavLink } from "@/components/shared/NavLink";
 import { useAuthStore } from "@/lib/auth-store";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,8 @@ const items = [
   { title: "Dashboard", url: "/user", icon: LayoutDashboard },
   { title: "AI Assistant", url: "/user/chat", icon: MessageSquare },
   { title: "Report Issue", url: "/user/report", icon: ClipboardList },
+  { title: "Recommendations", url: "/user/recommendations", icon: Lightbulb },
+  { title: "Help Center", url: "/user/help", icon: HelpCircle },
 ];
 
 export function UserSidebar() {

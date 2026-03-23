@@ -14,7 +14,7 @@ export default function SchedulePage() {
       <div className="flex flex-col items-center justify-center py-24 text-center animate-fade-up">
         <h1 className="text-2xl font-bold font-display">No data available</h1>
         <p className="mt-2 text-muted-foreground">Upload logs first to generate a maintenance schedule.</p>
-        <Button className="mt-4" onClick={() => navigate("/upload")}>Upload Logs</Button>
+        <Button className="mt-4" onClick={() => navigate("/admin/upload")}>Upload Logs</Button>
       </div>
     );
   }

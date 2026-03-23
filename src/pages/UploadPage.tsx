@@ -41,7 +41,7 @@ export default function UploadPage() {
     setLogs([log]);
     await runAnalysis();
     toast.success("Log submitted and analyzed");
-    navigate("/schedule");
+    navigate("/admin/schedule");
   };
 
   return (

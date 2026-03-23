@@ -18,9 +18,14 @@ import ChatPage from "@/pages/ChatPage";
 import EquipmentPage from "@/pages/EquipmentPage";
 import AnalyticsPage from "@/pages/AnalyticsPage";
 import ReportedIssuesPage from "@/pages/admin/ReportedIssuesPage";
+import AdminRecommendationsPage from "@/pages/admin/AdminRecommendationsPage";
+import MaintenanceMatrixPage from "@/pages/admin/MaintenanceMatrixPage";
+import AgentTracingPage from "@/pages/admin/AgentTracingPage";
 import UserDashboard from "@/pages/user/UserDashboard";
 import UserChatPage from "@/pages/user/UserChatPage";
 import ReportIssuePage from "@/pages/user/ReportIssuePage";
+import RecommendationsPage from "@/pages/user/RecommendationsPage";
+import QueryPage from "@/pages/user/QueryPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,13 +51,18 @@ const App = () => (
           <Route path="/admin/chat" element={<ProtectedRoute role="admin"><AdminLayout><ChatPage /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/schedule" element={<ProtectedRoute role="admin"><AdminLayout><SchedulePage /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/equipment" element={<ProtectedRoute role="admin"><AdminLayout><EquipmentPage /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/matrix" element={<ProtectedRoute role="admin"><AdminLayout><MaintenanceMatrixPage /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/analytics" element={<ProtectedRoute role="admin"><AdminLayout><AnalyticsPage /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/reports" element={<ProtectedRoute role="admin"><AdminLayout><ReportedIssuesPage /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/recommendations" element={<ProtectedRoute role="admin"><AdminLayout><AdminRecommendationsPage /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/tracing" element={<ProtectedRoute role="admin"><AdminLayout><AgentTracingPage /></AdminLayout></ProtectedRoute>} />
 
           {/* User (Employee) Portal */}
           <Route path="/user" element={<ProtectedRoute role="user"><UserLayout><UserDashboard /></UserLayout></ProtectedRoute>} />
           <Route path="/user/chat" element={<ProtectedRoute role="user"><UserLayout><UserChatPage /></UserLayout></ProtectedRoute>} />
           <Route path="/user/report" element={<ProtectedRoute role="user"><UserLayout><ReportIssuePage /></UserLayout></ProtectedRoute>} />
+          <Route path="/user/recommendations" element={<ProtectedRoute role="user"><UserLayout><RecommendationsPage /></UserLayout></ProtectedRoute>} />
+          <Route path="/user/help" element={<ProtectedRoute role="user"><UserLayout><QueryPage /></UserLayout></ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
