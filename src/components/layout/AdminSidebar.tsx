@@ -1,4 +1,4 @@
-import { LayoutDashboard, Upload, CalendarClock, MessageSquare, Settings, BarChart3, LogOut, AlertCircle, Activity } from "lucide-react";
+import { LayoutDashboard, Upload, CalendarClock, MessageSquare, Settings, BarChart3, LogOut, AlertCircle, Activity, Lightbulb, Brain, Grid3X3 } from "lucide-react";
 import { NavLink } from "@/components/shared/NavLink";
 import { useAuthStore } from "@/lib/auth-store";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import { useReportsStore } from "@/lib/reports-store";
+import { useRecommendationsStore } from "@/lib/recommendations-store";
 
 const items = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
@@ -14,8 +15,11 @@ const items = [
   { title: "AI Assistant", url: "/admin/chat", icon: MessageSquare },
   { title: "Schedule", url: "/admin/schedule", icon: CalendarClock },
   { title: "Equipment", url: "/admin/equipment", icon: Settings },
+  { title: "Maintenance Matrix", url: "/admin/matrix", icon: Grid3X3 },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "Reported Issues", url: "/admin/reports", icon: AlertCircle },
+  { title: "Recommendations", url: "/admin/recommendations", icon: Lightbulb },
+  { title: "Agent Tracing", url: "/admin/tracing", icon: Brain },
 ];
 
 export function AdminSidebar() {
@@ -24,6 +28,7 @@ export function AdminSidebar() {
   const logout = useAuthStore((s) => s.logout);
   const navigate = useNavigate();
   const openReports = useReportsStore((s) => s.reports.filter((r) => r.status === "Open").length);
+  const pendingRecs = useRecommendationsStore((s) => s.recommendations.filter((r) => r.status === "Pending").length);
 
   const handleLogout = () => {
     logout();
@@ -49,6 +54,9 @@ export function AdminSidebar() {
                       {!collapsed && <span>{item.title}</span>}
                       {!collapsed && item.title === "Reported Issues" && openReports > 0 && (
                         <Badge className="ml-auto h-5 min-w-5 justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">{openReports}</Badge>
+                      )}
+                      {!collapsed && item.title === "Recommendations" && pendingRecs > 0 && (
+                        <Badge className="ml-auto h-5 min-w-5 justify-center rounded-full bg-[hsl(var(--risk-medium))] text-[10px] text-white">{pendingRecs}</Badge>
                       )}
                     </NavLink>
                   </SidebarMenuButton>

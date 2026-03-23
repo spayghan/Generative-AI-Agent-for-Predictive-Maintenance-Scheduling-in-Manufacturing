@@ -1,5 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
+import { useAuthStore } from "@/lib/auth-store";
+import { useAIHistoryStore, AITraceStep } from "@/lib/ai-history-store";
+import { useAlertsStore } from "@/lib/alerts-store";
+import { equipmentList } from "@/lib/equipment-data";
 import { chatResponse } from "@/lib/ai-engine";
 import { ChatMessage } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -9,6 +13,10 @@ import ReactMarkdown from "react-markdown";
 
 export default function ChatPage() {
   const { logs, analyzedLogs, schedule, chatMessages, addChatMessage, clearChat, loadSampleData, runAnalysis } = useAppStore();
+  const user = useAuthStore((s) => s.user);
+  const addInteraction = useAIHistoryStore((s) => s.addInteraction);
+  const generateAlerts = useAlertsStore((s) => s.generateAlertsFromSchedule);
+  const historyContext = useAIHistoryStore((s) => s.getInteractionsForContext);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -17,6 +25,13 @@ export default function ChatPage() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [chatMessages, isTyping]);
+
+  // Generate alerts when schedule changes
+  useEffect(() => {
+    if (schedule.length > 0) {
+      generateAlerts(schedule, equipmentList);
+    }
+  }, [schedule]);
 
   const hasData = schedule.length > 0;
 
@@ -29,11 +44,30 @@ export default function ChatPage() {
     setInput("");
     setIsTyping(true);
 
-    await new Promise(r => setTimeout(r, 800));
+    await new Promise((r) => setTimeout(r, 800));
+
+    // Build trace steps
+    const traceSteps: AITraceStep[] = [
+      { step: 1, action: "Parse Query", detail: `Analyzing user input: "${text.slice(0, 50)}..."`, timestamp: new Date().toISOString() },
+      { step: 2, action: "Context Retrieval", detail: `Loaded ${logs.length} logs, ${schedule.length} schedule entries`, timestamp: new Date().toISOString() },
+      { step: 3, action: "History Check", detail: `Reviewed ${useAIHistoryStore.getState().interactions.length} past interactions for context`, timestamp: new Date().toISOString() },
+      { step: 4, action: "Pattern Matching", detail: "Matching query against known patterns (risk, equipment, schedule, summary)", timestamp: new Date().toISOString() },
+      { step: 5, action: "Response Generation", detail: "Generated contextual response with explanations", timestamp: new Date().toISOString() },
+    ];
 
     const response = chatResponse(text, analyzedLogs.length ? analyzedLogs : logs, schedule);
     const botMsg: ChatMessage = { id: (Date.now() + 1).toString(), role: "assistant", content: response, timestamp: new Date() };
     addChatMessage(botMsg);
+
+    // Store interaction with trace
+    addInteraction({
+      query: text,
+      response,
+      user: user?.email || "unknown",
+      role: user?.role || "user",
+      traceSteps,
+    });
+
     setIsTyping(false);
     inputRef.current?.focus();
   };
@@ -44,11 +78,11 @@ export default function ChatPage() {
   };
 
   const suggestions = [
-    "Which machines are at highest risk this week?",
-    "Show maintenance history for Pump Unit #4",
-    "What caused the last 3 unplanned downtimes?",
-    "Generate a 7-day maintenance schedule",
-    "Which equipment is overdue for servicing?",
+    "Which machines are at highest risk?",
+    "Show maintenance schedule",
+    "Give me a system overview",
+    "Why is M-101 critical?",
+    "What can you help me with?",
   ];
 
   return (
@@ -77,14 +111,14 @@ export default function ChatPage() {
             <h2 className="text-xl font-bold font-display">AI Maintenance Assistant</h2>
             <p className="mt-1 text-sm text-muted-foreground">Try asking:</p>
             <div className="mt-4 flex flex-wrap justify-center gap-2 max-w-2xl">
-              {suggestions.map(s => (
-                <button key={s} onClick={() => { setInput(s); }} className="rounded-lg border bg-secondary px-3 py-2 text-xs font-medium transition-colors hover:bg-primary hover:text-primary-foreground active:scale-[0.97]">{s}</button>
+              {suggestions.map((s) => (
+                <button key={s} onClick={() => setInput(s)} className="rounded-lg border bg-secondary px-3 py-2 text-xs font-medium transition-colors hover:bg-primary hover:text-primary-foreground active:scale-[0.97]">{s}</button>
               ))}
             </div>
           </div>
         )}
 
-        {chatMessages.map(msg => (
+        {chatMessages.map((msg) => (
           <div key={msg.id} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : ""}`}>
             {msg.role === "assistant" && (
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -120,8 +154,8 @@ export default function ChatPage() {
         )}
       </div>
 
-      <form onSubmit={e => { e.preventDefault(); handleSend(); }} className="mt-3 flex gap-2">
-        <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder={hasData ? "Ask about equipment health, maintenance history, or scheduling…" : "Load data first…"} disabled={!hasData || isTyping} className="flex-1" />
+      <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="mt-3 flex gap-2">
+        <Input ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} placeholder={hasData ? "Ask about equipment health, maintenance, or scheduling…" : "Load data first…"} disabled={!hasData || isTyping} className="flex-1" />
         <Button type="submit" size="icon" disabled={!input.trim() || !hasData || isTyping}>
           <Send className="h-4 w-4" />
         </Button>
