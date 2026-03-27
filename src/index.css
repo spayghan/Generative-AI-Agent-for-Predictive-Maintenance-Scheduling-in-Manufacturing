@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,63 +6,86 @@
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+    --background: 210 14% 98%;
+    /* very light gray / white background */
+    --foreground: 222 20% 15%;
+    /* dark text */
 
-    --card: 217 33% 17%;
-    --card-foreground: 210 40% 98%;
+    --card: 210 16% 98%;
+    /* white cards */
+    --card-foreground: 222 20% 15%;
 
-    --popover: 217 33% 17%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 210 16% 98%;
+    --popover-foreground: 222 20% 15%;
 
     --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
+    /* #2563EB */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 33% 22%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 45% 17%;
+    /* #0F172A DARK NAVY for text/blocks */
+    --secondary-foreground: 210 16% 98%;
 
-    --muted: 217 33% 22%;
-    --muted-foreground: 215 20% 55%;
+    --accent: 134 63% 48%;
+    /* #22C55E */
+    --accent-foreground: 0 0% 100%;
 
-    --accent: 217 33% 22%;
-    --accent-foreground: 210 40% 98%;
+    --warning: 42 96% 55%;
+    /* #F59E0B */
+    --warning-foreground: 222 47% 11%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 4 89% 61%;
+    /* #EF4444 */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 217 33% 25%;
-    --input: 217 33% 25%;
+    --muted: 220 20% 28%;
+    --muted-foreground: 210 20% 70%;
+
+    --border: 210 22% 85%;
+    /* light border */
+    --input: 210 22% 92%;
     --ring: 217 91% 60%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
-    --risk-high: 0 72% 51%;
-    --risk-medium: 38 92% 50%;
-    --risk-low: 142 71% 45%;
+    --risk-high: 4 89% 61%;
+    --risk-medium: 42 96% 55%;
+    --risk-low: 134 63% 48%;
 
-    --sidebar-background: 222 47% 9%;
-    --sidebar-foreground: 215 20% 65%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 91% 60%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 217 33% 20%;
+    /* LIGHT VERSION (If you prefer white sidebar) */
+    --sidebar-background: 210 14% 98%;
+    --sidebar-foreground: 222 20% 15%;
+    /* Changed to Dark Navy text */
+    --sidebar-border: 210 22% 90%;
+    --sidebar-accent: 217 91% 95%;
+    /* Light blue hover */
+    --sidebar-accent-foreground: 217 91% 60%;
+    /* Blue text on hover */
+    --sidebar-border: 225 29% 16%;
     --sidebar-ring: 217 91% 60%;
 
     --chart-1: 217 91% 60%;
-    --chart-2: 142 71% 45%;
-    --chart-3: 38 92% 50%;
-    --chart-4: 0 72% 51%;
+    --chart-2: 134 63% 48%;
+    --chart-3: 42 96% 55%;
+    --chart-4: 4 89% 61%;
     --chart-5: 262 83% 58%;
   }
 }
+
 
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: "Poppins", "Inter", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  .card-theme {
+    @apply rounded-xl border bg-card text-card-foreground p-6 shadow-sm transition-shadow hover:shadow-md;
   }
 }
 
@@ -70,18 +93,23 @@
   .risk-high {
     @apply bg-[hsl(var(--risk-high))] text-white;
   }
+
   .risk-medium {
     @apply bg-[hsl(var(--risk-medium))] text-white;
   }
+
   .risk-low {
     @apply bg-[hsl(var(--risk-low))] text-white;
   }
+
   .risk-dot-high {
     @apply bg-[hsl(var(--risk-high))];
   }
+
   .risk-dot-medium {
     @apply bg-[hsl(var(--risk-medium))];
   }
+
   .risk-dot-low {
     @apply bg-[hsl(var(--risk-low))];
   }
@@ -93,6 +121,7 @@
     transform: translateY(16px);
     filter: blur(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -104,7 +133,18 @@
   animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.animate-fade-up-delay-1 { animation-delay: 80ms; }
-.animate-fade-up-delay-2 { animation-delay: 160ms; }
-.animate-fade-up-delay-3 { animation-delay: 240ms; }
-.animate-fade-up-delay-4 { animation-delay: 320ms; }
+.animate-fade-up-delay-1 {
+  animation-delay: 80ms;
+}
+
+.animate-fade-up-delay-2 {
+  animation-delay: 160ms;
+}
+
+.animate-fade-up-delay-3 {
+  animation-delay: 240ms;
+}
+
+.animate-fade-up-delay-4 {
+  animation-delay: 320ms;
+}
